@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  myDB:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecret
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mysecret
+  joyphp:
+    build: .
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - 8083:80
+    links:
+      - myDB
+    depends_on:
+      - myDB
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecret
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mysecret  
+      - PMA_HOST=myDB
+    ports:
+      - 8084:80  
